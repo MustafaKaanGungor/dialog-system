@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     private Vector2 movementInput;
     [SerializeField] private float moveSpeed = 5f;
     private bool isWalking;
-    [SerializeField] private bool isInteracting;
+    private bool isInteracting;
     private Vector3 lastInteractDir;
     [SerializeField] private LayerMask interactableLayerMask;
     private NPC selectedNPC;
@@ -130,17 +130,20 @@ public class Player : MonoBehaviour
 
     private void OnInteractAction()
     {
-        Debug.Log("Interact action performed");
-        if(selectedNPC != null)
+        if(!isInteracting && selectedNPC != null)
         {
             selectedNPC.Interact();
             NPCInteracted?.Invoke(selectedNPC);
             isInteracting = true;
             interactedNPC = selectedNPC;
+        } else if(isInteracting)
+        {
+            selectedNPC.Interact();
+            NPCInteracted?.Invoke(selectedNPC);
         }
     }
 
-    private void StopInteraction()
+    public void StopInteraction()
     {
         isInteracting = false;
         StoppedInteraction?.Invoke(interactedNPC);
