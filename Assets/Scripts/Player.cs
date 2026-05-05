@@ -103,7 +103,6 @@ public class Player : MonoBehaviour
                 if(npc != selectedNPC)
                 {
                     SetSelectedNPC(npc);
-                    Debug.Log("Selected NPC: " + npc.gameObject.name);
                 }
             }
             else
