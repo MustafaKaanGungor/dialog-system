@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+
     public static Player Instance { get; private set; }
     private Vector2 movementInput;
     [SerializeField] private float moveSpeed = 5f;
@@ -15,6 +17,7 @@ public class Player : MonoBehaviour
     private float interactionDistance = 3f;
     public Action<NPC> NPCInteracted;
     public Action<NPC> StoppedInteraction;
+    private Animator animator;
 
 
     void Awake()
@@ -25,6 +28,8 @@ public class Player : MonoBehaviour
         } else {
             Instance = this;
         }
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Start() {
@@ -80,6 +85,7 @@ public class Player : MonoBehaviour
         }
 
         isWalking = moveDirection != Vector3.zero;
+        animator.SetBool(IsWalkingHash, isWalking);
         transform.forward = Vector3.Slerp(transform.forward, moveDirection, 0.1f);
     }
 
