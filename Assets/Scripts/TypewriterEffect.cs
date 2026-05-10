@@ -39,6 +39,7 @@ public class TypewriterEffect : MonoBehaviour
         text.maxVisibleCharacters = text.textInfo.characterCount;
         CurrentlyWriting = false;
         typewriterCoroutine = null;
+        Completed?.Invoke();
     }
 
     private IEnumerator Typewrite(TMP_Text text) 

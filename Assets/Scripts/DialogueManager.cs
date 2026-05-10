@@ -18,6 +18,7 @@ public class DialogueManager : MonoBehaviour
     private void OnEnable()
     {
         dialogueEventChannel.OnNPCInteracted += OnNPCInteracted;
+        dialogueEventChannel.OnContinueInteraction += OnContinueInteraction;
         dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
         typewriterEffect.Completed += OnTypewriterCompleted;
     }
@@ -25,6 +26,7 @@ public class DialogueManager : MonoBehaviour
     private void OnDisable()
     {
         dialogueEventChannel.OnNPCInteracted -= OnNPCInteracted;
+        dialogueEventChannel.OnContinueInteraction -= OnContinueInteraction;
         dialogueEventChannel.OnStoppedInteraction -= OnStoppedInteraction;
         typewriterEffect.Completed -= OnTypewriterCompleted;
     }
@@ -50,17 +52,34 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    private void OnContinueInteraction(NPC npc)
+    {
+        switch (state)
+        {
+            case DialogueState.Typing:
+                typewriterEffect.Skip(speechText);
+                break;
+
+            case DialogueState.WaitingForInput:
+                if (lineIndex + 1 < currentDialogue.dialogueLines.Count)
+                    AdvanceLine();
+                else
+                    EndDialogue();
+                break;
+        }
+    }
+
     private void StartDialogue(NPC npc)
     {
         currentNPC = npc;
         CharacterSO character = npc.characterData;
+        dialogueBoxView.Show(character);
         currentDialogue = character.dialogues[Random.Range(0, character.dialogues.Length)];
         lineIndex = 0;
 
         speechText.text = currentDialogue.dialogueLines[0];
         speechText.maxVisibleCharacters = 0;
         typewriterEffect.StartTyping(speechText);
-        dialogueBoxView.Show(character);
 
         state = DialogueState.Typing;
     }

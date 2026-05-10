@@ -5,11 +5,17 @@ using UnityEngine.Events;
 public class DialogueEventChannelSO : ScriptableObject
 {
     public UnityAction<NPC> OnNPCInteracted;
+    public UnityAction<NPC> OnContinueInteraction;
     public UnityAction<NPC> OnStoppedInteraction;
 
     public void RaiseNPCInteracted(NPC npc)
     {
         OnNPCInteracted?.Invoke(npc);
+    }
+
+    public void RaiseContinueInteraction(NPC npc)
+    {
+        OnContinueInteraction?.Invoke(npc);
     }
 
     public void RaiseStoppedInteraction(NPC npc)

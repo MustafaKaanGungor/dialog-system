@@ -53,12 +53,12 @@ public class Player : MonoBehaviour
         Vector3 moveDirection = new Vector3(movementInput.x, 0f, movementInput.y);
 
         float moveDistance = moveSpeed * Time.deltaTime;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirection, moveDistance);
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirection, moveDistance, 0, QueryTriggerInteraction.Ignore);
 
         if(!canMove)
         {
             Vector3 moveDirX = new Vector3(moveDirection.x, 0f, 0f).normalized;
-            canMove = moveDirX.x != 0f && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirX, moveDistance);
+            canMove = moveDirX.x != 0f && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirX, moveDistance, 0, QueryTriggerInteraction.Ignore);
 
             if(canMove)
             {
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
             } else
             {
                 Vector3 moveDirZ = new Vector3(0f, 0f, moveDirection.z).normalized;
-                canMove = moveDirZ.z != 0f && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirZ, moveDistance);
+                canMove = moveDirZ.z != 0f && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirZ, moveDistance, 0 ,QueryTriggerInteraction.Ignore);
                 if(canMove)
                 {
                     moveDirection = moveDirZ;
@@ -76,7 +76,6 @@ public class Player : MonoBehaviour
         
         if(canMove)
         {
-
             transform.position += moveDirection * moveDistance;
         }
 
@@ -136,27 +135,17 @@ public class Player : MonoBehaviour
         if(!isInteracting && selectedInteractable != null)
         {
             selectedInteractable.Interact();
-            dialogueEventChannel.RaiseNPCInteracted(selectedInteractable as NPC);
             isInteracting = true;
             interactedInteractable = selectedInteractable;
         } else if(isInteracting)
         {
-            selectedInteractable.Interact();
-            dialogueEventChannel.RaiseNPCInteracted(selectedInteractable as NPC);
+            interactedInteractable.ContinueInteract();
         }
     }
 
     private void OnDialogueEnded(NPC npc)
     {
         isInteracting = false;
-        interactedInteractable = null;
-    }
-
-    public void StopInteraction()
-    {
-        isInteracting = false;
-        dialogueEventChannel.RaiseStoppedInteraction(interactedInteractable as NPC);
-        SetSelectedInteractable(null);
         interactedInteractable = null;
     }
 
