@@ -126,13 +126,15 @@ namespace DialogSystem.Gameplay
     {
         if(selectedInteractable != null)
         {
-            selectedInteractable.UnHighlight();
+            NPC npc = selectedInteractable as NPC;
+            npc.UnHighlight();
         }
 
         selectedInteractable = interactable;
 
         if(interactable != null) {
-            interactable.Highlight();
+            NPC npc = interactable as NPC;
+            npc.Highlight();
         }
     }
 

@@ -6,9 +6,9 @@ namespace DialogSystem.Core
     [CreateAssetMenu(fileName = "DialogueEventChannelSO", menuName = "Dialogue System/Event Channel", order = 1)]
     public class DialogueEventChannelSO : ScriptableObject
     {
-        public UnityAction<IInteractable> OnNPCInteracted;
-        public UnityAction<IInteractable> OnContinueInteraction;
-        public UnityAction<IInteractable> OnStoppedInteraction;
+        public event UnityAction<IInteractable> OnNPCInteracted;
+        public event UnityAction<IInteractable> OnContinueInteraction;
+        public event UnityAction<IInteractable> OnStoppedInteraction;
 
         public void RaiseNPCInteracted(IInteractable interactable)
         {

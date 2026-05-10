@@ -19,6 +19,12 @@ namespace DialogSystem.Gameplay
             dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
         }
 
+        void OnDisable()
+        {
+            dialogueEventChannel.OnNPCInteracted -= OnNPCInteracted;
+            dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
+        }
+
         private void OnStoppedInteraction(IInteractable interactable)
         {
             NPC npc = (NPC)interactable;

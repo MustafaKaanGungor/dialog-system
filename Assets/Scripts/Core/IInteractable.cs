@@ -6,7 +6,5 @@ namespace DialogSystem.Core
         void Interact();
         void ContinueInteract();
         void StopInteract();
-        void Highlight();
-        void UnHighlight();
     }
 }

@@ -1,125 +1,169 @@
 # AGENTS.md - Dialog System Unity Project
 
 ## Project Overview
-Unity dialog system project using Universal Render Pipeline (URP), Cinemachine, DOTween, and the new Input System. Implements NPC interactions with dialogue boxes featuring a typewriter effect.
+Unity 6 dialog system using URP, Cinemachine 3, DOTween, and the new Input System. NPC interactions with dialogue boxes and typewriter effect. AI Navigation and Animation Rigging for NPC behavior. ScriptableObject-based event channel architecture for decoupled communication.
+
+## Project Structure
+```
+Assets/
+  Scripts/
+    Core/           IInteractable.cs, DialogueEventChannelSO.cs
+    Core/Input/     GameInput.cs, PlayerInputActions.cs
+    Dialogue/       CharacterSO.cs, DialogueSO.cs, DialogueBoxView.cs,
+                    DialogueManager.cs, TypewriterEffect.cs
+    Gameplay/       Player.cs, NPC.cs, NPCHeadTracking.cs,
+                    CameraController.cs, TargetCamController.cs
+  Plugins/           DOTween (Demigiant DLL)
+  QuickOutline/      Third-party outline effect
+  Prefabs/
+  Scenes/
+  Data/              ScriptableObject assets (Character1.asset, etc.)
+  Settings/          URP assets
+```
 
 ## Build Commands
-Unity projects compile automatically in the Editor. To build from command line:
+Unity projects compile automatically in the Editor. From command line:
 
 ```bash
-# Windows - Build the project (requires Unity installation)
-"C:\Program Files\Unity\Hub\Editor\2023.3.0f1\Editor\Unity.exe" -quit -batchmode -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system" -buildTarget Win64
+# Build Windows executable
+"C:\Program Files\Unity\Hub\Editor\6000.0.59f2\Editor\Unity.exe" -quit -batchmode -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system" -buildTarget Win64
 
-# Open project in Unity Editor
-"C:\Program Files\Unity\Hub\Editor\2023.3.0f1\Editor\Unity.exe" -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system"
+# Open in Unity Editor
+"C:\Program Files\Unity\Hub\Editor\6000.0.59f2\Editor\Unity.exe" -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system"
+
+# Run all tests
+"C:\Program Files\Unity\Hub\Editor\6000.0.59f2\Editor\Unity.exe" -quit -batchmode -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system" -runTests -testResults "test-results.xml"
 ```
 
 ## Test Commands
-This project uses Unity Test Framework (`com.unity.test-framework`). Tests should be placed in `Assets/Editor/Tests/` or `Assets/Tests/`.
+Uses `com.unity.test-framework` 1.6.0 (installed but no tests written yet). Create tests in `Assets/Tests/`.
 
 ```bash
-# Run all tests via Unity CLI
-"C:\Program Files\Unity\Hub\Editor\2023.3.0f1\Editor\Unity.exe" -quit -batchmode -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system" -runTests -testResults "test-results.xml"
-
-# Run specific test class
-"C:\Program Files\Unity\Hub\Editor\2023.3.0f1\Editor\Unity.exe" -quit -batchmode -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system" -runTests -testFilter "NPC.TestInteraction" -testResults "test-results.xml"
+# Run a single test class
+"C:\Program Files\Unity\Hub\Editor\6000.0.59f2\Editor\Unity.exe" -quit -batchmode -projectPath "C:\Users\mkaan\Programming\UnityProjects\dialog-system" -runTests -testFilter "Namespace.ClassName" -testResults "test-results.xml"
 ```
 
-In-Editor: Use **Window > General > Test Runner** to run tests interactively.
+In-Editor: **Window > General > Test Runner**.
+
+## Namespaces
+- `DialogSystem.Core` – `IInteractable`, `DialogueEventChannelSO`, `GameInput`
+- `DialogSystem.Dialogue` – `CharacterSO`, `DialogueSO`, `DialogueManager`, `DialogueBoxView`, `TypewriterEffect`
+- `DialogSystem.Gameplay` – `Player`, `NPC`, `CameraController`, `NPCHeadTracking`
 
 ## Code Style Guidelines
 
 ### File Structure
-- One MonoBehaviour/ScriptableObject class per file
-- File name must match class name exactly
-- Place scripts in `Assets/Scripts/` with subdirectories for organization
-- Editor scripts go in `Assets/Editor/` (automatically excluded from builds)
+- One class per file, filename matches class name
+- Scripts in `Assets/Scripts/<namespace-dir>/`
+- Editor scripts in `Assets/Editor/`
+- ScriptableObjects in `Assets/Data/`
 
 ### Imports
-- Use `using` statements (no fully qualified names)
-- Order: System namespaces first, then Unity, then third-party, then project
+- `using` statements only (no fully qualified names)
+- Order: System, UnityEngine, Unity modules, third-party, project
 ```csharp
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-// Third-party (DOTween, etc.)
-// Project imports (if any)
+using Unity.Cinemachine;
+using DialogSystem.Core;
 ```
 
-### Naming Conventions
-- **Classes**: `PascalCase` (e.g., `DialogueBoxUI`, `CharacterSO`)
-- **Public fields**: `PascalCase` (e.g., `public CharacterSO characterData;`)
-- **Private fields**: `camelCase` (e.g., `private Vector2 movementInput;`)
-- **[SerializeField] fields**: `camelCase` (e.g., `private float moveSpeed = 5f;`)
-- **Methods**: `PascalCase` (e.g., `HandleMovement()`, `SetSelectedNPC()`)
-- **Parameters**: `camelCase` (e.g., `OnNPCInteracted(NPC npc)`)
-- **Local variables**: `camelCase`
-- **Constants**: `PascalCase` or `UPPER_SNAKE_CASE`
-- **ScriptableObject assets**: Use suffix pattern (e.g., `DialogueSO`, `CharacterSO`)
+### Naming
+| Element | Convention | Examples |
+|---|---|---|
+| Classes | PascalCase | `DialogueManager`, `CharacterSO` |
+| Public fields | PascalCase | `characterData`, `dialogues` |
+| [SerializeField] private | camelCase | `dialogueEventChannel`, `moveSpeed` |
+| Private fields | camelCase | `currentDialogue`, `lineIndex` |
+| Methods | PascalCase | `StartDialogue()`, `HandleMovement()` |
+| Parameters | camelCase | `NPC npc`, `CharacterSO characterData` |
+| Properties | PascalCase | `public bool CanInteract => true;` |
+| Interfaces | `I` prefix | `IInteractable` |
+| ScriptableObjects | `SO` suffix | `CharacterSO`, `DialogueSO`, `DialogueEventChannelSO` |
 
 ### Formatting
-- **Braces**: Allman style (opening brace on new line)
+- **Braces**: Prefer Allman (brace on new line). Codebase has mixed Allman/K&R; stay consistent with surrounding file.
 ```csharp
 private void Start()
 {
-    // code
+    if (condition)
+    {
+        DoSomething();
+    }
 }
 ```
-- **Indentation**: 4 spaces (Unity default)
-- **Line length**: Keep under 120 characters when possible
-- **Spacing**: Space after keywords (`if`, `while`, `for`), around operators
-- **Empty lines**: One between methods, group related code with single blank lines
-
-### Types
-- Use `var` sparingly - prefer explicit types for clarity in Unity code
-- Use `float` for Unity math (not `double`)
-- Use `Vector2`, `Vector3`, `Quaternion` for spatial data
-- Use `Coroutine` and `IEnumerator` for async/timed operations
-- Use C# properties for public access: `public bool CurrentlyWriting { get; private set; }`
+- **Indentation**: 4 spaces
+- **`var`**: Avoid; use explicit types
+- **Properties**: Expression-bodied when get-only: `public bool CanInteract => true;`
 
 ### Unity-Specific Patterns
-- **Lifecycle methods**: `Awake()`, `Start()`, `Update()`, `OnDestroy()` - keep in this order
-- **Singleton pattern**: Use lazy initialization with `Instance` property and `Awake()` check
+- **Lifecycle order**: `Awake()`, `OnEnable()`, `Start()`, `Update()`, `OnDisable()`, `OnDestroy()`
+- **Singleton** (GameInput only): `Instance` property + `Awake()` check
 ```csharp
-public static Player Instance { get; private set; }
-private void Awake() {
-    if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-    else { Instance = this; }
+public static GameInput Instance { get; private set; }
+private void Awake()
+{
+    if (Instance != null && Instance != this)
+    {
+        Destroy(gameObject);
+        return;
+    }
+    Instance = this;
 }
 ```
-- **Serialization**: Use `[SerializeField]` for private fields exposed to Inspector
-- **Menu items**: Use `[CreateAssetMenu]` for ScriptableObjects
+- **ScriptableObject event channel**: `DialogueEventChannelSO` with `UnityAction` fields and `Raise*()` methods. Subscribe in `OnEnable()`/`Start()`, unsubscribe in `OnDisable()`.
 ```csharp
-[CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue System/Dialogue")]
-public class DialogueSO : ScriptableObject
+private void OnEnable()
+{
+    dialogueEventChannel.OnNPCInteracted += OnNPCInteracted;
+}
+private void OnDisable()
+{
+    dialogueEventChannel.OnNPCInteracted -= OnNPCInteracted;
+}
 ```
+- **CreateAssetMenu**: Every ScriptableObject needs `[CreateAssetMenu]` with a `Dialogue System/` path
+
+### Events
+- `System.Action` for simple input events (`GameInput.InteractPerformed`)
+- `event Action` for component callbacks (`TypewriterEffect.Completed`)
+- `UnityAction` for ScriptableObject event channels (`DialogueEventChannelSO`)
+- Always unsubscribe in `OnDisable()` (never leak subscriptions)
 
 ### Error Handling
-- Use `Debug.Log()`, `Debug.LogWarning()`, `Debug.LogError()` for debugging
-- Check for null with `if (object != null)` before accessing
-- Use `TryGetComponent(out T component)` instead of `GetComponent<T>()` when appropriate
-- Avoid exceptions in Update loops - validate inputs early
-
-### Events and Actions
-- Use `System.Action` and `System.Action<T>` for simple events
-- Subscribe in `Start()`, unsubscribe in `OnDestroy()` if needed
-```csharp
-public Action<NPC> NPCInteracted;
-Player.Instance.NPCInteracted += OnNPCInteracted;
-```
+- Null check with `if (x != null)` before access
+- `TryGetComponent<T>(out T component)` over `GetComponent<T>()` when uncertain
+- Null-conditional operator: `eventField?.Invoke()`
+- No try-catch in Update loops
+- `Debug.Log()`/`Debug.LogWarning()`/`Debug.LogError()` for debugging
+- `[TextArea]` attribute on string fields that need multi-line editing
 
 ### Comments
-- Avoid comments unless explaining non-obvious logic
-- Use `//` for single-line comments, `/* */` for multi-line (rare)
-- TODO comments: `// TODO: Implement dialogue branching`
+- Avoid comments. Omit them unless explaining non-obvious logic.
+- TODO format: `// TODO: Implement dialogue branching`
 
-### Git Ignore
+### Third-Party Assets
+- **DOTween**: DLL-based, in `Assets/Plugins/Demigiant/`
+- **QuickOutline**: In `Assets/QuickOutline/` (Outline.cs component)
+- Add packages via Unity Package Manager or edit `Packages/manifest.json`
+
+### Key Packages
+- `com.unity.cinemachine` 3.1.6
+- `com.unity.inputsystem` 1.14.2
+- `com.unity.render-pipelines.universal` 17.0.4
+- `com.unity.animation.rigging` 1.3.1
+- `com.unity.ai.navigation` 2.0.9
+- `com.unity.test-framework` 1.6.0
+- `com.unity.ugui` 2.0.0
+
+### VS Code
+- `.vscode/settings.json` hides `.meta`, `.prefab`, `.unity`, `.asset` files from explorer
+- File nesting: `*.sln` nests `*.csproj`
+- File associations: Unity YAML files open as YAML
+
+### Git
 - Never commit: `Library/`, `Temp/`, `Logs/`, `.vs/`, `*.csproj`, `*.sln`
 - Always commit: `Assets/`, `Packages/`, `ProjectSettings/`
-
-### Package Management
-- Add packages via Unity Package Manager or edit `Packages/manifest.json`
-- Third-party assets go in `Assets/Plugins/` (e.g., DOTween)
