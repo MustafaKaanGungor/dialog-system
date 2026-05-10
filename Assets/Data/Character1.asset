@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c924c5c7ce3e37a40b8b78fa7384bb79, type: 3}
   m_Name: Character1
   m_EditorClassIdentifier: 
-  characterName: Volkan Zelzelevski
-  nameBGColor: {r: 0.42830187, g: 0.4844356, b: 1, a: 1}
-  nameTextColor: {r: 1, g: 0.98427427, b: 0, a: 1}
+  characterName: Volodymyr Zelenskyy
+  nameBGColor: {r: 0.5566037, g: 0.6021582, b: 1, a: 1}
+  nameTextColor: {r: 0.8490566, g: 0.83573806, b: 0, a: 1}
   dialogues:
   - {fileID: 11400000, guid: f5464918083705249b7310098c990199, type: 2}
   - {fileID: 11400000, guid: 38eca1227d8e23a43bd83d846db6c783, type: 2}

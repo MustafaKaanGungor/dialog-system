@@ -2,27 +2,30 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DialogueBoxView : MonoBehaviour
+namespace DialogSystem.Dialogue
 {
-    [SerializeField] private Image nameBG;
-    [SerializeField] private TextMeshProUGUI nameText;
-
-    private void Start()
+    public class DialogueBoxView : MonoBehaviour
     {
-        Hide();
-    }
+        [SerializeField] private Image nameBG;
+        [SerializeField] private TextMeshProUGUI nameText;
 
-    public void Show(CharacterSO characterData)
-    {
-        gameObject.SetActive(true);
+        private void Start()
+        {
+            Hide();
+        }
 
-        nameBG.color = characterData.nameBGColor;
-        nameText.color = characterData.nameTextColor;
-        nameText.text = characterData.characterName;  
-    }
+        public void Show(CharacterSO characterData)
+        {
+            gameObject.SetActive(true);
 
-    public void Hide()
-    {
-        gameObject.SetActive(false);
+            nameBG.color = characterData.nameBGColor;
+            nameText.color = characterData.nameTextColor;
+            nameText.text = characterData.characterName;  
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

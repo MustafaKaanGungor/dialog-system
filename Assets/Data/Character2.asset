@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c924c5c7ce3e37a40b8b78fa7384bb79, type: 3}
   m_Name: Character2
   m_EditorClassIdentifier: 
-  characterName: Veli Demir Yutin
-  nameBGColor: {r: 0.5415094, g: 0.80962455, b: 1, a: 1}
-  nameTextColor: {r: 1, g: 0, b: 0, a: 1}
+  characterName: Vladimir Putin
+  nameBGColor: {r: 0.6094339, g: 0.83642966, b: 1, a: 1}
+  nameTextColor: {r: 0.83396226, g: 0.0047204727, b: 0.0047204727, a: 1}
   dialogues:
   - {fileID: 11400000, guid: 948361f6c8ee9ab4384bd8e0215dff1a, type: 2}
+  - {fileID: 11400000, guid: 21b258ad78bd13d40ba850f015173f8b, type: 2}

@@ -1,25 +1,28 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "DialogueEventChannelSO", menuName = "Dialogue System/Event Channel", order = 1)]
-public class DialogueEventChannelSO : ScriptableObject
+namespace DialogSystem.Core
 {
-    public UnityAction<NPC> OnNPCInteracted;
-    public UnityAction<NPC> OnContinueInteraction;
-    public UnityAction<NPC> OnStoppedInteraction;
-
-    public void RaiseNPCInteracted(NPC npc)
+    [CreateAssetMenu(fileName = "DialogueEventChannelSO", menuName = "Dialogue System/Event Channel", order = 1)]
+    public class DialogueEventChannelSO : ScriptableObject
     {
-        OnNPCInteracted?.Invoke(npc);
-    }
+        public UnityAction<IInteractable> OnNPCInteracted;
+        public UnityAction<IInteractable> OnContinueInteraction;
+        public UnityAction<IInteractable> OnStoppedInteraction;
 
-    public void RaiseContinueInteraction(NPC npc)
-    {
-        OnContinueInteraction?.Invoke(npc);
-    }
+        public void RaiseNPCInteracted(IInteractable interactable)
+        {
+            OnNPCInteracted?.Invoke(interactable);
+        }
 
-    public void RaiseStoppedInteraction(NPC npc)
-    {
-        OnStoppedInteraction?.Invoke(npc);
+        public void RaiseContinueInteraction(IInteractable interactable)
+        {
+            OnContinueInteraction?.Invoke(interactable);
+        }
+
+        public void RaiseStoppedInteraction(IInteractable interactable)
+        {
+            OnStoppedInteraction?.Invoke(interactable);
+        }
     }
 }

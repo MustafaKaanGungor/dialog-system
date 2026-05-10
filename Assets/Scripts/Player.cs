@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
+using DialogSystem.Core;
 
-public class Player : MonoBehaviour
+namespace DialogSystem.Gameplay
+{
+    public class Player : MonoBehaviour
 {
     private Vector2 movementInput;
     [SerializeField] private float moveSpeed = 5f;
@@ -92,6 +95,9 @@ public class Player : MonoBehaviour
         if(moveDirection != Vector3.zero)
         {
             lastInteractDir = moveDirection;
+        } else
+        {
+            lastInteractDir = transform.forward;
         }
 
         Vector3 rayCastOrigin = transform.position + Vector3.up;
@@ -143,7 +149,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnDialogueEnded(NPC npc)
+    private void OnDialogueEnded(IInteractable interactable)
     {
         isInteracting = false;
         interactedInteractable = null;
@@ -155,4 +161,5 @@ public class Player : MonoBehaviour
         Vector3 rayCastOrigin = transform.position + Vector3.up;
         Gizmos.DrawLine(rayCastOrigin, rayCastOrigin + lastInteractDir * 1.5f);
     }
+}
 }

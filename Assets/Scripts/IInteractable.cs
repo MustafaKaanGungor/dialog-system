@@ -1,11 +1,12 @@
-using UnityEngine;
-
-public interface IInteractable
+namespace DialogSystem.Core
 {
-    bool CanInteract { get; }
-    void Interact();
-    void ContinueInteract();
-    void StopInteract();
-    void Highlight();
-    void UnHighlight();
+    public interface IInteractable
+    {
+        bool CanInteract { get; }
+        void Interact();
+        void ContinueInteract();
+        void StopInteract();
+        void Highlight();
+        void UnHighlight();
+    }
 }
