@@ -9,17 +9,19 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineCamera dialogCamera;
     private bool hasTarget = false;
 
+    [SerializeField] private DialogueEventChannelSO dialogueEventChannel;
+
     private void Start() {
-        Player.Instance.NPCInteracted += OnNPCInteracted;
-        Player.Instance.StoppedInteraction += OnStoppedInteraction;
+        dialogueEventChannel.OnNPCInteracted += OnNPCInteracted;
+        dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
     }
 
     private void OnStoppedInteraction(NPC npc)
     {
         targetGroup.RemoveMember(npc.transform);
         
-        playerCamera.Priority.Value = 1;
-        dialogCamera.Priority.Value = 0;
+        playerCamera.gameObject.SetActive(true);
+        dialogCamera.gameObject.SetActive(false);
         hasTarget = false;
         
     }
@@ -34,7 +36,7 @@ public class CameraController : MonoBehaviour
         hasTarget = true;
         targetGroup.AddMember(npc.transform, 1f, 2f);
     
-        playerCamera.Priority.Value = 0;
-        dialogCamera.Priority.Value = 1;
+        playerCamera.gameObject.SetActive(false);
+        dialogCamera.gameObject.SetActive(true);
     }
 }

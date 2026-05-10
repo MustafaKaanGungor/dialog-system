@@ -3,33 +3,34 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
-
-    public static Player Instance { get; private set; }
     private Vector2 movementInput;
     [SerializeField] private float moveSpeed = 5f;
     private bool isWalking;
     private bool isInteracting;
     private Vector3 lastInteractDir;
     [SerializeField] private LayerMask interactableLayerMask;
-    private NPC selectedNPC;
-    private NPC interactedNPC;
+    private IInteractable selectedInteractable;
+    private IInteractable interactedInteractable;
     private float interactionDistance = 3f;
-    public Action<NPC> NPCInteracted;
-    public Action<NPC> StoppedInteraction;
     private Animator animator;
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+
+    [SerializeField] private DialogueEventChannelSO dialogueEventChannel;
 
 
     void Awake()
     {
-        if (Instance != null && Instance != this) {
-            Destroy(gameObject);
-            return;
-        } else {
-            Instance = this;
-        }
-
         animator = GetComponentInChildren<Animator>();
+    }
+
+    private void OnEnable()
+    {
+        dialogueEventChannel.OnStoppedInteraction += OnDialogueEnded;
+    }
+
+    private void OnDisable()
+    {
+        dialogueEventChannel.OnStoppedInteraction -= OnDialogueEnded;
     }
 
     private void Start() {
@@ -38,17 +39,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        HandleInteraction();
-
-        if(isInteracting)
+        if(!isInteracting)
         {
-            if(Vector3.Distance(transform.position, interactedNPC.transform.position) > interactionDistance + 0.5f)
-            {
-                StopInteraction();    
-            }
-                
+            HandleMovement();
         }
+        
+        HandleInteraction();
     }
 
     private void HandleMovement()
@@ -104,56 +100,64 @@ public class Player : MonoBehaviour
 
         if(hit.collider)
         {
-            if(hit.collider.TryGetComponent(out NPC npc))
+            if(hit.collider.TryGetComponent(out IInteractable interactable))
             {
-                if(npc != selectedNPC)
+                if(interactable != selectedInteractable)
                 {
-                    SetSelectedNPC(npc);
+                    SetSelectedInteractable(interactable);
                 }
             }
             else
             {
-                SetSelectedNPC(null);
+                SetSelectedInteractable(null);
             }
         } else
         {
-            SetSelectedNPC(null);
+            SetSelectedInteractable(null);
         }
     }
 
-    private void SetSelectedNPC(NPC npc)
+    private void SetSelectedInteractable(IInteractable interactable)
     {
-        if(selectedNPC != null)
+        if(selectedInteractable != null)
         {
-            selectedNPC.GetComponentInChildren<Outline>().enabled = false;
+            selectedInteractable.UnHighlight();
         }
-        selectedNPC = npc;
-        if(npc != null) {
-            npc.GetComponentInChildren<Outline>().enabled = true;
+
+        selectedInteractable = interactable;
+
+        if(interactable != null) {
+            interactable.Highlight();
         }
     }
 
     private void OnInteractAction()
     {
-        if(!isInteracting && selectedNPC != null)
+        if(!isInteracting && selectedInteractable != null)
         {
-            selectedNPC.Interact();
-            NPCInteracted?.Invoke(selectedNPC);
+            selectedInteractable.Interact();
+            dialogueEventChannel.RaiseNPCInteracted(selectedInteractable as NPC);
             isInteracting = true;
-            interactedNPC = selectedNPC;
+            interactedInteractable = selectedInteractable;
         } else if(isInteracting)
         {
-            selectedNPC.Interact();
-            NPCInteracted?.Invoke(selectedNPC);
+            selectedInteractable.Interact();
+            dialogueEventChannel.RaiseNPCInteracted(selectedInteractable as NPC);
         }
+    }
+
+    private void OnDialogueEnded(NPC npc)
+    {
+        isInteracting = false;
+        interactedInteractable = null;
     }
 
     public void StopInteraction()
     {
         isInteracting = false;
-        StoppedInteraction?.Invoke(interactedNPC);
-        SetSelectedNPC(null);
-        interactedNPC = null;
+        dialogueEventChannel.RaiseStoppedInteraction(interactedInteractable as NPC);
+        SetSelectedInteractable(null);
+        interactedInteractable = null;
     }
 
     void OnDrawGizmos()
