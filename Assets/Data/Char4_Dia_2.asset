@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0e10af061a0f61479db98448faa6977, type: 3}
+  m_Name: Char4_Dia_2
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - <speed=10><emotion=dismiss>You're <size=80%>late</size>, <color=#FFD700>my friend</color>.
+  - <emotion=angry><speed=30><b>Three days</b> past due. I don't like <color=#FF0000>waiting</color>.
+  - <speed=8><pause=0.5><emotion=nervous>My <i>associates</i> are getting <size=120%>impatient</size>.
+  - <emotion=happy><speed=25><color=#FFD700>But...</color> I'm a <b>reasonable</b>
+    man. <pause=0.3><speed=15>You have <color=#00FF00>48 hours</color>.

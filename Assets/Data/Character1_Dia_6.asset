@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueLines:
   - <emotion=happy>Hey! Good to see you!
-  - I've been thinking<pause=0.5> about what you said.
+  - I've been thinking<pause=0.1> about what you said.
   - <emotion=nervous>And, uh... I might have messed up.
   - <speed=15><emotion=defeated>I accidentally sold the car for way too little.
   - <emotion=angry>Before you say anything, YES I know it was stupid.

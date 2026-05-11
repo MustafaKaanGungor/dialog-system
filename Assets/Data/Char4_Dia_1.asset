@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0e10af061a0f61479db98448faa6977, type: 3}
+  m_Name: Char4_Dia_1
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - <speed=12><emotion=happy><color=#FFD700>Salvatore.</color> <size=80%>Please,</size>
+    have a seat.
+  - <speed=8><pause=0.6>I understand you've been <i>busy</i> in my territory.
+  - <emotion=angry><speed=35>That was a <b>mistake</b>.
+  - '<speed=10><color=#FF0000>One I''m willing to overlook...</color>
+
+    <emotion=nervous><speed=15>...for
+    the right <b>price</b>.'

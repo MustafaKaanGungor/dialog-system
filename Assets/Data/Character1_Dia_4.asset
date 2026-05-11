@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Character1_Dia_4
   m_EditorClassIdentifier: 
   dialogueLines:
-  - I have something<pause=1.5> important<pause=1.0> to tell you.
-  - Are you<pause=0.5> absolutely<pause=0.5> sure?
+  - I have something<pause=0.1> important<pause=0.1> to tell you.
+  - Are you<pause=0.1> absolutely<pause=0.1> sure?

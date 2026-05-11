@@ -53,7 +53,7 @@ namespace DialogSystem.Gameplay
     private void HandleMovement()
     {
         movementInput = GameInput.Instance.GetMovementVector();
-        Vector3 moveDirection = new Vector3(movementInput.x, 0f, movementInput.y);
+        Vector3 moveDirection = new Vector3(-movementInput.y, 0f, movementInput.x);
 
         float moveDistance = moveSpeed * Time.deltaTime;
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.5f, moveDirection, moveDistance, 0, QueryTriggerInteraction.Ignore);
@@ -90,7 +90,7 @@ namespace DialogSystem.Gameplay
     private void HandleInteraction()
     {
         movementInput = GameInput.Instance.GetMovementVector();
-        Vector3 moveDirection = new Vector3(movementInput.x, 0f, movementInput.y);
+        Vector3 moveDirection = new Vector3(-movementInput.y, 0f, movementInput.x);
 
         if(moveDirection != Vector3.zero)
         {
@@ -124,18 +124,18 @@ namespace DialogSystem.Gameplay
 
     private void SetSelectedInteractable(IInteractable interactable)
     {
-        if(selectedInteractable != null)
-        {
-            NPC npc = selectedInteractable as NPC;
-            npc.UnHighlight();
-        }
+        // if(selectedInteractable != null)
+        // {
+        //     NPC npc = selectedInteractable as NPC;
+        //     npc.UnHighlight();
+        // }
 
         selectedInteractable = interactable;
 
-        if(interactable != null) {
-            NPC npc = interactable as NPC;
-            npc.Highlight();
-        }
+        // if(interactable != null) {
+        //     NPC npc = interactable as NPC;
+        //     npc.Highlight();
+        // }
     }
 
     private void OnInteractAction()
