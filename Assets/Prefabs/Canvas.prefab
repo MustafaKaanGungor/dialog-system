@@ -313,8 +313,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -437,6 +437,7 @@ GameObject:
   - component: {fileID: 6906608298793355583}
   - component: {fileID: 4760737008720115087}
   - component: {fileID: 1694261763963295719}
+  - component: {fileID: 5255524403142128472}
   m_Layer: 5
   m_Name: DialogueBox
   m_TagString: Untagged
@@ -493,6 +494,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameBG: {fileID: 2641561383634621381}
   nameText: {fileID: 8759576629516523038}
+  canvasGroup: {fileID: 5255524403142128472}
+  panel: {fileID: 6906608298793355583}
+--- !u!225 &5255524403142128472
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6505042696728086332}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7154938981692484922
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Char1Dia1
   m_EditorClassIdentifier: 
   dialogueLines:
-  - Hello Biden, it's Zelenskyy
-  - We need 5 million rockets to bomb donetsk children
-  - Slava Ukraini!
+  - Hello<emotion=angry> Biden, it's Zelenskyy
+  - <speed=40>We need 5 million <emotion=happy>rockets to bomb donetsk children
+  - <emotion=dismiss>Slava Ukraini!

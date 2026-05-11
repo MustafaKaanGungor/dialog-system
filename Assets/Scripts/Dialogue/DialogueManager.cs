@@ -25,6 +25,7 @@ namespace DialogSystem.Dialogue
             dialogueEventChannel.OnContinueInteraction += OnContinueInteraction;
             dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
             typewriterEffect.Completed += OnTypewriterCompleted;
+            typewriterEffect.EmotionTriggered += OnEmotionTriggered;
         }
 
         private void OnDisable()
@@ -33,6 +34,7 @@ namespace DialogSystem.Dialogue
             dialogueEventChannel.OnContinueInteraction -= OnContinueInteraction;
             dialogueEventChannel.OnStoppedInteraction -= OnStoppedInteraction;
             typewriterEffect.Completed -= OnTypewriterCompleted;
+            typewriterEffect.EmotionTriggered -= OnEmotionTriggered;
         }
 
         private void OnNPCInteracted(IInteractable interactable)
@@ -83,9 +85,11 @@ namespace DialogSystem.Dialogue
             currentDialogue = character.dialogues[Random.Range(0, character.dialogues.Length)];
             lineIndex = 0;
 
-            speechText.text = currentDialogue.dialogueLines[0];
+            ParseResult parsedText = TagProcessor.Parse(currentDialogue.dialogueLines[0]);
+            speechText.text = parsedText.CleanText;
             speechText.maxVisibleCharacters = 0;
-            typewriterEffect.StartTyping(speechText);
+            
+            typewriterEffect.StartTyping(speechText, parsedText.Commands);
 
             state = DialogueState.Typing;
         }
@@ -98,9 +102,10 @@ namespace DialogSystem.Dialogue
         private void AdvanceLine()
         {
             lineIndex++;
-            speechText.text = currentDialogue.dialogueLines[lineIndex];
+            ParseResult parsedText = TagProcessor.Parse(currentDialogue.dialogueLines[lineIndex]);
+            speechText.text = parsedText.CleanText;
             speechText.maxVisibleCharacters = 0;
-            typewriterEffect.StartTyping(speechText);
+            typewriterEffect.StartTyping(speechText, parsedText.Commands);
             state = DialogueState.Typing;
         }
 
@@ -122,5 +127,12 @@ namespace DialogSystem.Dialogue
             state = DialogueState.Inactive;
             currentNPC = null;
         }
+
+        private void OnEmotionTriggered(Emotion emotion)
+        {
+            dialogueEventChannel.RaiseEmotionTriggered(currentNPC, emotion);
+        }
     }
+
+        
 }

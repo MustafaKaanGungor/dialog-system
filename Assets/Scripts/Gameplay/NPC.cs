@@ -11,7 +11,50 @@ namespace DialogSystem.Gameplay
 
         public bool CanInteract => true;
         
+        private Animator animator;
         [SerializeField] private DialogueEventChannelSO dialogueEventChannel;
+
+        private void Start()
+        {
+            dialogueEventChannel.OnEmotionTriggered += OnEmotionTriggered;
+
+            animator = GetComponentInChildren<Animator>();
+        }
+
+        void OnDisable()
+        {
+            dialogueEventChannel.OnEmotionTriggered -= OnEmotionTriggered;
+        }
+
+        private void OnEmotionTriggered(IInteractable interactable, Emotion emotion)
+        {
+            if(interactable == this as IInteractable)
+            {
+                switch(emotion)
+                {
+                    case Emotion.happy:
+                        animator.SetTrigger("happy");
+                    break;
+                    case Emotion.angry:
+                        animator.SetTrigger("angry");
+                    break;
+                    case Emotion.stretch:
+                        animator.SetTrigger("stretch");
+                    break;
+                    case Emotion.dismiss:
+                        animator.SetTrigger("dismiss");
+                    break;
+                    case Emotion.defeated:
+                        animator.SetTrigger("defeated");
+                    break;
+                    case Emotion.nervous:
+                        animator.SetTrigger("nervous");
+                    break;
+                    
+                }
+            }
+            
+        }
 
         public void Interact()
         {

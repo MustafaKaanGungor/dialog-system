@@ -1,3 +1,4 @@
+using DialogSystem.Dialogue;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +10,7 @@ namespace DialogSystem.Core
         public event UnityAction<IInteractable> OnNPCInteracted;
         public event UnityAction<IInteractable> OnContinueInteraction;
         public event UnityAction<IInteractable> OnStoppedInteraction;
+        public event UnityAction<IInteractable, Emotion> OnEmotionTriggered;
 
         public void RaiseNPCInteracted(IInteractable interactable)
         {
@@ -23,6 +25,11 @@ namespace DialogSystem.Core
         public void RaiseStoppedInteraction(IInteractable interactable)
         {
             OnStoppedInteraction?.Invoke(interactable);
+        }
+
+        public void RaiseEmotionTriggered(IInteractable interactable, Emotion emotion)
+        {
+            OnEmotionTriggered?.Invoke(interactable, emotion);
         }
     }
 }

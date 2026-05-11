@@ -17,4 +17,8 @@ MonoBehaviour:
   nameTextColor: {r: 0.8490566, g: 0.83573806, b: 0, a: 1}
   dialogues:
   - {fileID: 11400000, guid: f5464918083705249b7310098c990199, type: 2}
-  - {fileID: 11400000, guid: 38eca1227d8e23a43bd83d846db6c783, type: 2}
+  - {fileID: 11400000, guid: 56868ea27017105448c7e09019e3e5e1, type: 2}
+  - {fileID: 11400000, guid: f086036f25229834ba8881f805515f18, type: 2}
+  - {fileID: 11400000, guid: 52e8bd77a25a6b74ea3f9825bfd0ca3b, type: 2}
+  - {fileID: 11400000, guid: 884d365857b24884ca77453d994e14b2, type: 2}
+  - {fileID: 11400000, guid: d63b0c30923f2da438d6dfa301ce325f, type: 2}

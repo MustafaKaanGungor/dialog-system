@@ -1,22 +1,31 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace DialogSystem.Dialogue
 {
+    public enum Emotion
+    {
+        happy,
+        stretch,
+        angry,
+        dismiss,
+        defeated,
+        nervous
+    }
+
+    public struct TagCommand
+    {
+        public int CharIndex;
+        public string TagName;
+        public string Value;
+    }
+    public struct ParseResult
+    {
+        public string CleanText;
+        public List<TagCommand> Commands;
+    }
+
     public static class TagProcessor
     {
-        public struct TagCommand
-        {
-            public int CharIndex;
-            public string TagName;
-            public string Value;
-        }
-        public struct ParseResult
-        {
-            public string CleanText;
-            public List<TagCommand> Commands;
-        }
-
         public static ParseResult Parse(string text)
         {
             string[] subTexts = text.Split('<', '>');
@@ -54,7 +63,7 @@ namespace DialogSystem.Dialogue
 
         private static bool IsCustomTag(string tag)
         {
-            return tag.StartsWith("speed=") || tag.StartsWith("pause=") || tag.StartsWith("emotion=") || tag.StartsWith("action=");
+            return tag.StartsWith("speed=") || tag.StartsWith("pause=") || tag.StartsWith("emotion=");
         }
     }
 }
