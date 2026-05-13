@@ -15,13 +15,11 @@
 
 - **ScriptableObject Event Channel** — fully decoupled event bus. Producers and consumers never reference each other directly.
 - **Inline Tag Parser** — embed `<emotion=happy>`, `<speed=50>`, `<pause=0.5>` directly in dialogue lines to trigger NPC animations, change typewriter speed, or insert pauses.
-- **Finite State Machine** — `DialogueManager` transitions through `Inactive → Typing → WaitingForInput` for clean interaction flow.
 - **Typewriter Effect** — character-by-character text reveal with punctuation-aware delay, skip-to-end, and inline tag processing.
 - **NPC Emotion System** — 6 emotions (happy, angry, stretch, dismiss, defeated, nervous) driven by animation triggers from dialogue tags.
 - **Cinemachine 3 Camera Blending** — smooth transition from first-person to dialogue camera with NPC target-framing via `CinemachineTargetGroup`.
 - **Animation Rigging Head Tracking** — NPCs smoothly track the player using `MultiAimConstraint` with lerped weight and position.
 - **DOTween UI Animations** — fade + scale sequences on dialogue box show/hide with easing.
-- **First-Person Interaction** — capsule-cast movement and raycast-based interaction via the `IInteractable` interface.
 - **URP World Bending** — shader-based environment bending effect using URP render pipeline callbacks.
 - **New Input System** — action-map-based input (WASD movement, E interact) via auto-generated `PlayerInputActions`.
 
@@ -121,29 +119,3 @@ Standard Unity rich text (`<color=#00FF00>`, `<b>`, `<i>`, `<size=>`) passes thr
 | [`GameInput.cs`](./Assets/Scripts/Core/Input/GameInput.cs) | Singleton wrapping the new Input System actions |
 | [`BendingManager.cs`](./Assets/Scripts/BendingManager.cs) | URP world bending via `RenderPipelineManager` callbacks |
 
----
-
-## Tech Stack
-
-| Technology | Version | Purpose |
-|---|---|---|
-| Unity | 6000.0.59f2 | Engine |
-| Universal Render Pipeline (URP) | 17.0.4 | Rendering pipeline |
-| Cinemachine | 3.1.6 | Camera system (blending, target groups) |
-| Input System | 1.14.2 | Player input (action maps, bindings) |
-| Animation Rigging | 1.3.1 | NPC head tracking (MultiAimConstraint) |
-| AI Navigation | 2.0.9 | NavMesh pathfinding (ready for NPC movement) |
-| DOTween | — | UI animations (fade, scale, sequences) |
-| QuickOutline | — | Object highlight shader |
-| uGUI / TextMeshPro | 2.0.0 | Dialogue UI rendering |
-| Test Framework | 1.6.0 | Unit test framework (installed) |
-
----
-
-*Add a screenshot or GIF here: `![Demo](./.github/demo.gif)`*
-
----
-
-## License
-
-This project is for portfolio demonstration purposes.
