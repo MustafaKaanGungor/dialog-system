@@ -2,21 +2,23 @@ using TMPro;
 using UnityEngine;
 using DialogSystem.Core;
 using DialogSystem.Gameplay;
+using System.Collections.Generic;
 
 namespace DialogSystem.Dialogue
 {
     public class DialogueManager : MonoBehaviour
     {
         private enum DialogueState { Inactive, Typing, WaitingForInput }
-
+        private Dictionary<string, RuntimeDialogueNode> nodeLookup = new Dictionary<string, RuntimeDialogueNode>();
         [SerializeField] private DialogueEventChannelSO dialogueEventChannel;
         [SerializeField] private DialogueBoxView dialogueBoxView;
         [SerializeField] private TypewriterEffect typewriterEffect;
         [SerializeField] private TextMeshProUGUI speechText;
 
         private DialogueState state = DialogueState.Inactive;
-        private DialogueSO currentDialogue;
-        private int lineIndex = 0;
+        private RuntimeDialogueGraph currentGraph;
+        private RuntimeDialogueNode currentNode;
+
         private NPC currentNPC;
 
         private void OnEnable()
@@ -49,10 +51,33 @@ namespace DialogSystem.Dialogue
 
                 case DialogueState.Typing:
                     typewriterEffect.Skip(speechText);
+                    state = DialogueState.WaitingForInput;
                     break;
 
                 case DialogueState.WaitingForInput:
-                    if (lineIndex + 1 < currentDialogue.dialogueLines.Count)
+                    if (currentNode.choices != null && currentNode.choices.Count > 0)
+                    {
+                        List<string> choices = new List<string>();
+                        for (int i = 0; i < currentNode.choices.Count; i++)
+                        {
+                            choices.Add(currentNode.choices[i].ChoiceText);
+                        }
+
+                        dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
+                        {
+                            string destinationID = currentNode.choices[choiceIndex].DestinationID;
+                            if (!string.IsNullOrEmpty(destinationID))
+                            {
+                                currentNode.NextNodeID = destinationID;
+                                AdvanceLine();
+                            }
+                            else
+                            {
+                                EndDialogue();
+                            }
+                        });
+                    }
+                    else if (!string.IsNullOrEmpty(currentNode.NextNodeID))
                         AdvanceLine();
                     else
                         EndDialogue();
@@ -66,10 +91,33 @@ namespace DialogSystem.Dialogue
             {
                 case DialogueState.Typing:
                     typewriterEffect.Skip(speechText);
+                    state = DialogueState.WaitingForInput;
                     break;
 
                 case DialogueState.WaitingForInput:
-                    if (lineIndex + 1 < currentDialogue.dialogueLines.Count)
+                    if (currentNode.choices != null && currentNode.choices.Count > 0)
+                    {
+                        List<string> choices = new List<string>();
+                        for (int i = 0; i < currentNode.choices.Count; i++)
+                        {
+                            choices.Add(currentNode.choices[i].ChoiceText);
+                        }
+
+                        dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
+                        {
+                            string destinationID = currentNode.choices[choiceIndex].DestinationID;
+                            if (!string.IsNullOrEmpty(destinationID))
+                            {
+                                currentNode.NextNodeID = destinationID;
+                                AdvanceLine();
+                            }
+                            else
+                            {
+                                EndDialogue();
+                            }
+                        });
+                    }
+                    else if (!string.IsNullOrEmpty(currentNode.NextNodeID))
                         AdvanceLine();
                     else
                         EndDialogue();
@@ -82,10 +130,20 @@ namespace DialogSystem.Dialogue
             currentNPC = npc;
             CharacterSO character = npc.characterData;
             dialogueBoxView.Show(character);
-            currentDialogue = character.dialogues[Random.Range(0, character.dialogues.Length)];
-            lineIndex = 0;
+            currentGraph = character.dialogues[Random.Range(0, character.dialogues.Length)];
+            foreach (var node in currentGraph.dialogueNodes)
+            {
+                nodeLookup[node.NodeID] = node;
+            }
 
-            ParseResult parsedText = TagProcessor.Parse(currentDialogue.dialogueLines[0]);
+            if(string.IsNullOrEmpty(currentGraph.EntyNodeID))
+            {
+               Debug.LogError("Graph Empty");
+               EndDialogue();
+            }
+
+            currentNode = nodeLookup[currentGraph.EntyNodeID];
+            ParseResult parsedText = TagProcessor.Parse(currentNode.DialogueText);
             speechText.text = parsedText.CleanText;
             speechText.maxVisibleCharacters = 0;
             
@@ -97,12 +155,39 @@ namespace DialogSystem.Dialogue
         private void OnTypewriterCompleted()
         {
             state = DialogueState.WaitingForInput;
+            if (currentNode.choices != null && currentNode.choices.Count > 0)
+                    {
+                        List<string> choices = new List<string>();
+                        for (int i = 0; i < currentNode.choices.Count; i++)
+                        {
+                            choices.Add(currentNode.choices[i].ChoiceText);
+                        }
+
+                        dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
+                        {
+                            string destinationID = currentNode.choices[choiceIndex].DestinationID;
+                            if (!string.IsNullOrEmpty(destinationID))
+                            {
+                                currentNode.NextNodeID = destinationID;
+                                AdvanceLine();
+                            }
+                            else
+                            {
+                                EndDialogue();
+                            }
+                        });
+                    }
         }
 
         private void AdvanceLine()
         {
-            lineIndex++;
-            ParseResult parsedText = TagProcessor.Parse(currentDialogue.dialogueLines[lineIndex]);
+            if(!nodeLookup.ContainsKey(currentNode.NextNodeID))
+            {
+                EndDialogue();
+                return;
+            }
+            currentNode = nodeLookup[currentNode.NextNodeID];
+            ParseResult parsedText = TagProcessor.Parse(currentNode.DialogueText);
             speechText.text = parsedText.CleanText;
             speechText.maxVisibleCharacters = 0;
             typewriterEffect.StartTyping(speechText, parsedText.Commands);

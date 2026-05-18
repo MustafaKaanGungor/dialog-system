@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System;
+using System.Collections.Generic;
 
 namespace DialogSystem.Dialogue
 {
@@ -11,6 +13,8 @@ namespace DialogSystem.Dialogue
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private RectTransform panel;
+        [SerializeField] private GameObject choicePanel;
+        [SerializeField] private GameObject choiceButtonPrefab;
 
         private void Start()
         {
@@ -30,6 +34,34 @@ namespace DialogSystem.Dialogue
             nameBG.color = characterData.nameBGColor;
             nameText.color = characterData.nameTextColor;
             nameText.text = characterData.characterName;  
+        }
+
+        public void SetChoiceButtons(List<string> choices, Action<int> onChoiceSelected)
+        {
+            ClearChoiceButtons();
+            choicePanel.SetActive(true);
+
+            foreach(string choice in choices)
+            {
+                GameObject buttonObj = Instantiate(choiceButtonPrefab, choicePanel.transform);
+                TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+                buttonText.text = choice;
+
+                int index = choices.IndexOf(choice);
+                Button button = buttonObj.GetComponent<Button>();
+                button.onClick.AddListener(() => onChoiceSelected(index));
+                button.onClick.AddListener(() => ClearChoiceButtons());
+            }
+        }
+
+        public void ClearChoiceButtons()
+        {
+            foreach(Transform child in choicePanel.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            choicePanel.SetActive(false);
         }
 
         public void Hide()

@@ -8,6 +8,6 @@ namespace DialogSystem.Dialogue
         public string characterName;
         public Color nameBGColor = Color.white;
         public Color nameTextColor = Color.black;
-        public DialogueSO[] dialogues;
+        public RuntimeDialogueGraph[] dialogues;
     }
 }

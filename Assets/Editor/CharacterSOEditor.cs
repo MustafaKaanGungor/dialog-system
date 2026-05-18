@@ -56,11 +56,8 @@ public class CharacterSOEditor : Editor
 
         if(GUILayout.Button("Create New Dialogue", GUILayout.Height(30)))
         {
-            DialogueSO newDialogue = CreateInstance<DialogueSO>();
-            newDialogue.dialogueLines = new List<string>
-            {
-                "New Dialogue Line"
-            };
+            RuntimeDialogueGraph newDialogue = CreateInstance<RuntimeDialogueGraph>();
+
 
             string assetPath = $"Assets/Data/{characterSO.name}_Dia_{characterSO.dialogues.Length + 1}.asset";
 

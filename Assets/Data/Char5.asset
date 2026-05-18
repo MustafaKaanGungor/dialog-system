@@ -16,5 +16,4 @@ MonoBehaviour:
   nameBGColor: {r: 0.101960786, g: 0.101960786, b: 0.18039216, a: 1}
   nameTextColor: {r: 0, g: 1, b: 1, a: 1}
   dialogues:
-  - {fileID: 11400000, guid: ae21833861005174687d1b64edebcec7, type: 2}
-  - {fileID: 11400000, guid: 41e79110d99ccee429d08e702e13edf6, type: 2}
+  - {fileID: 3965311268370046156, guid: 8d0603e5889a4b443af413fe08363d30, type: 3}
