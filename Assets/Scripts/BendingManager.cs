@@ -5,19 +5,14 @@ using UnityEngine.Rendering;
 [ExecuteAlways]
 public class BendingManager : MonoBehaviour
 {
-  #region Constants
-
+  [Header("Constants")]
   private const string BENDING_FEATURE = "ENABLE_BENDING";
 
   private const string PLANET_FEATURE = "ENABLE_BENDING_PLANET";
 
-  private static readonly int BENDING_AMOUNT =
-    Shader.PropertyToID("_BendingAmount");
+  private static readonly int BENDING_AMOUNT = Shader.PropertyToID("_BendingAmount");
 
-  #endregion
-
-
-  #region Inspector
+  [Header("Inspector")]
 
   [SerializeField]
   private bool enablePlanet = default;
@@ -26,17 +21,10 @@ public class BendingManager : MonoBehaviour
   [Range(0.005f, 0.1f)]
   private float bendingAmount = 0.015f;
 
-  #endregion
 
-
-  #region Fields
-
+  [Header("Fields")]
   private float _prevAmount;
 
-  #endregion
-
-
-  #region MonoBehaviour
 
   private void Awake ()
   {
@@ -74,29 +62,20 @@ public class BendingManager : MonoBehaviour
     RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
   }
 
-  #endregion
-
-
-  #region Methods
-
   private void UpdateBendingAmount ()
   {
     _prevAmount = bendingAmount;
     Shader.SetGlobalFloat(BENDING_AMOUNT, bendingAmount);
   }
 
-  private static void OnBeginCameraRendering (ScriptableRenderContext ctx,
-                                              Camera cam)
+  private static void OnBeginCameraRendering (ScriptableRenderContext ctx, Camera cam)
   {
-    cam.cullingMatrix = Matrix4x4.Ortho(-99, 99, -99, 99, 0.001f, 99) *
-                        cam.worldToCameraMatrix;
+    cam.cullingMatrix = Matrix4x4.Ortho(-99, 99, -99, 99, 0.001f, 99) * cam.worldToCameraMatrix;
   }
 
-  private static void OnEndCameraRendering (ScriptableRenderContext ctx,
-                                            Camera cam)
+  private static void OnEndCameraRendering (ScriptableRenderContext ctx, Camera cam)
   {
     cam.ResetCullingMatrix();
   }
 
-  #endregion
 }

@@ -14,7 +14,7 @@ namespace DialogSystem.Gameplay
     [SerializeField] private LayerMask interactableLayerMask;
     private IInteractable selectedInteractable;
     private IInteractable interactedInteractable;
-    private float interactionDistance = 3f;
+    [SerializeField] private float interactionDistance = 3f;
     private Animator animator;
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
@@ -34,6 +34,7 @@ namespace DialogSystem.Gameplay
     private void OnDisable()
     {
         dialogueEventChannel.OnStoppedInteraction -= OnDialogueEnded;
+        GameInput.Instance.InteractPerformed -= OnInteractAction;
     }
 
     private void Start() {
@@ -124,18 +125,7 @@ namespace DialogSystem.Gameplay
 
     private void SetSelectedInteractable(IInteractable interactable)
     {
-        // if(selectedInteractable != null)
-        // {
-        //     NPC npc = selectedInteractable as NPC;
-        //     npc.UnHighlight();
-        // }
-
         selectedInteractable = interactable;
-
-        // if(interactable != null) {
-        //     NPC npc = interactable as NPC;
-        //     npc.Highlight();
-        // }
     }
 
     private void OnInteractAction()

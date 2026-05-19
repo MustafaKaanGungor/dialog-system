@@ -26,7 +26,7 @@ public class DialogueGraphImporter : ScriptedImporter
             var entryPort = startNode.GetOutputPorts().FirstOrDefault()?.firstConnectedPort;
             if(entryPort != null)
             {
-                runtimeGraph.EntyNodeID = NodeIDMap[entryPort.GetNode()];
+                runtimeGraph.EntryNodeID = NodeIDMap[entryPort.GetNode()];
             }
         }
 

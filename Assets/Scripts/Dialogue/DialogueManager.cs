@@ -21,8 +21,7 @@ namespace DialogSystem.Dialogue
 
         private NPC currentNPC;
 
-        private void OnEnable()
-        {
+        private void Start() {
             dialogueEventChannel.OnNPCInteracted += OnNPCInteracted;
             dialogueEventChannel.OnContinueInteraction += OnContinueInteraction;
             dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
@@ -55,32 +54,7 @@ namespace DialogSystem.Dialogue
                     break;
 
                 case DialogueState.WaitingForInput:
-                    if (currentNode.choices != null && currentNode.choices.Count > 0)
-                    {
-                        List<string> choices = new List<string>();
-                        for (int i = 0; i < currentNode.choices.Count; i++)
-                        {
-                            choices.Add(currentNode.choices[i].ChoiceText);
-                        }
-
-                        dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
-                        {
-                            string destinationID = currentNode.choices[choiceIndex].DestinationID;
-                            if (!string.IsNullOrEmpty(destinationID))
-                            {
-                                currentNode.NextNodeID = destinationID;
-                                AdvanceLine();
-                            }
-                            else
-                            {
-                                EndDialogue();
-                            }
-                        });
-                    }
-                    else if (!string.IsNullOrEmpty(currentNode.NextNodeID))
-                        AdvanceLine();
-                    else
-                        EndDialogue();
+                    WaitingForInput();
                     break;
             }
         }
@@ -95,32 +69,7 @@ namespace DialogSystem.Dialogue
                     break;
 
                 case DialogueState.WaitingForInput:
-                    if (currentNode.choices != null && currentNode.choices.Count > 0)
-                    {
-                        List<string> choices = new List<string>();
-                        for (int i = 0; i < currentNode.choices.Count; i++)
-                        {
-                            choices.Add(currentNode.choices[i].ChoiceText);
-                        }
-
-                        dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
-                        {
-                            string destinationID = currentNode.choices[choiceIndex].DestinationID;
-                            if (!string.IsNullOrEmpty(destinationID))
-                            {
-                                currentNode.NextNodeID = destinationID;
-                                AdvanceLine();
-                            }
-                            else
-                            {
-                                EndDialogue();
-                            }
-                        });
-                    }
-                    else if (!string.IsNullOrEmpty(currentNode.NextNodeID))
-                        AdvanceLine();
-                    else
-                        EndDialogue();
+                    WaitingForInput();
                     break;
             }
         }
@@ -129,20 +78,26 @@ namespace DialogSystem.Dialogue
         {
             currentNPC = npc;
             CharacterSO character = npc.characterData;
+            if(character.dialogues == null || character.dialogues.Length == 0)
+            {
+                Debug.LogError("No dialogues assigned to character: " + character.characterName);
+                return;
+            }
+            
             dialogueBoxView.Show(character);
             currentGraph = character.dialogues[Random.Range(0, character.dialogues.Length)];
-            foreach (var node in currentGraph.dialogueNodes)
+            foreach (RuntimeDialogueNode node in currentGraph.dialogueNodes)
             {
                 nodeLookup[node.NodeID] = node;
             }
 
-            if(string.IsNullOrEmpty(currentGraph.EntyNodeID))
+            if(string.IsNullOrEmpty(currentGraph.EntryNodeID))
             {
                Debug.LogError("Graph Empty");
                EndDialogue();
             }
 
-            currentNode = nodeLookup[currentGraph.EntyNodeID];
+            currentNode = nodeLookup[currentGraph.EntryNodeID];
             ParseResult parsedText = TagProcessor.Parse(currentNode.DialogueText);
             speechText.text = parsedText.CleanText;
             speechText.maxVisibleCharacters = 0;
@@ -155,28 +110,7 @@ namespace DialogSystem.Dialogue
         private void OnTypewriterCompleted()
         {
             state = DialogueState.WaitingForInput;
-            if (currentNode.choices != null && currentNode.choices.Count > 0)
-                    {
-                        List<string> choices = new List<string>();
-                        for (int i = 0; i < currentNode.choices.Count; i++)
-                        {
-                            choices.Add(currentNode.choices[i].ChoiceText);
-                        }
-
-                        dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
-                        {
-                            string destinationID = currentNode.choices[choiceIndex].DestinationID;
-                            if (!string.IsNullOrEmpty(destinationID))
-                            {
-                                currentNode.NextNodeID = destinationID;
-                                AdvanceLine();
-                            }
-                            else
-                            {
-                                EndDialogue();
-                            }
-                        });
-                    }
+            WaitingForInput();
         }
 
         private void AdvanceLine()
@@ -216,6 +150,36 @@ namespace DialogSystem.Dialogue
         private void OnEmotionTriggered(Emotion emotion)
         {
             dialogueEventChannel.RaiseEmotionTriggered(currentNPC, emotion);
+        }
+
+        private void WaitingForInput()
+        {
+            if (currentNode.choices != null && currentNode.choices.Count > 0)
+            {
+                List<string> choices = new List<string>();
+                for (int i = 0; i < currentNode.choices.Count; i++)
+                {
+                    choices.Add(currentNode.choices[i].ChoiceText);
+                }
+
+                dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
+                {
+                    string destinationID = currentNode.choices[choiceIndex].DestinationID;
+                    if (!string.IsNullOrEmpty(destinationID))
+                    {
+                        currentNode.NextNodeID = destinationID;
+                        AdvanceLine();
+                    }
+                    else
+                    {
+                        EndDialogue();
+                    }
+                });
+            }
+            else if (!string.IsNullOrEmpty(currentNode.NextNodeID))
+                AdvanceLine();
+            else
+                EndDialogue();
         }
     }
 
