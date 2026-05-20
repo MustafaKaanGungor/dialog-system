@@ -22,7 +22,7 @@ namespace DialogSystem.Gameplay
         void OnDisable()
         {
             dialogueEventChannel.OnNPCInteracted -= OnNPCInteracted;
-            dialogueEventChannel.OnStoppedInteraction += OnStoppedInteraction;
+            dialogueEventChannel.OnStoppedInteraction -= OnStoppedInteraction;
         }
 
         private void OnStoppedInteraction(IInteractable interactable)

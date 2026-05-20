@@ -68,7 +68,7 @@ namespace DialogSystem.Gameplay
 
         public void StopInteract()
         {
-            
+            //? for future use if we want to trigger something when interaction stops
         }
 
         public void Highlight()

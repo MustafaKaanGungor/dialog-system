@@ -36,6 +36,7 @@ namespace DialogSystem.Dialogue
 
             tagCommands = commands;
             simpleDelay = new WaitForSeconds(1 / _charactersPerSecond);
+            punctuationDelay = new WaitForSeconds(_punctuationDelay);
 
             typewriterCoroutine = StartCoroutine(Typewrite(text));
         }
@@ -48,7 +49,7 @@ namespace DialogSystem.Dialogue
             }
             text.maxVisibleCharacters = text.textInfo.characterCount;
 
-            foreach (var item in tagCommands)
+            foreach (TagCommand item in tagCommands)
             {
                 switch(item.TagName)
                 {
@@ -79,7 +80,7 @@ namespace DialogSystem.Dialogue
 
                 text.maxVisibleCharacters++;
 
-                foreach (var item in tagCommands)
+                foreach (TagCommand item in tagCommands)
                 {
                     if(item.CharIndex == currentlyVisibleCharacterIndex)
                     {

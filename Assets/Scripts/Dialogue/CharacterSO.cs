@@ -8,6 +8,14 @@ namespace DialogSystem.Dialogue
         public string characterName;
         public Color nameBGColor = Color.white;
         public Color nameTextColor = Color.black;
-        public DialogueSO[] dialogues;
+        public RuntimeDialogueGraph[] dialogues;
+
+        private void OnValidate()
+        {
+            if(dialogues == null || dialogues.Length == 0)
+            {
+                Debug.LogError("Character has no dialogues assigned", this);
+            }
+        }
     }
 }
