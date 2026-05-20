@@ -2,7 +2,7 @@
 
 > A modular, event-driven dialogue system for Unity 6, built with URP, Cinemachine 3, DOTween, and the new Input System. Demonstrates clean architecture, decoupled communication, and polished player-NPC interactions.
 
-![Unity 6000.0.59f2](https://img.shields.io/badge/Unity-6000.0.59f2-000000?logo=unity)
+![Unity 6000.3.15f1](https://img.shields.io/badge/Unity-6000.3.15f1-000000?logo=unity)
 ![URP](https://img.shields.io/badge/URP-17.0.4-purple?logo=unity)
 ![Cinemachine](https://img.shields.io/badge/Cinemachine-3.1-red?logo=unity)
 ![Input System](https://img.shields.io/badge/Input%20System-1.14-blue?logo=unity)
