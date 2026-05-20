@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0e10af061a0f61479db98448faa6977, type: 3}
+  m_Name: Character1_Dia_6
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - <emotion=happy>Hey! Good to see you!
+  - I've been thinking<pause=0.1> about what you said.
+  - <emotion=nervous>And, uh... I might have messed up.
+  - <speed=15><emotion=defeated>I accidentally sold the car for way too little.
+  - <emotion=angry>Before you say anything, YES I know it was stupid.
+  - <emotion=stretch>Anyway... <emotion=dismiss>what's done is done.
+  - <speed=30><emotion=happy>Let's grab a drink and forget about it!

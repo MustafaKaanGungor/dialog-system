@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
+using Unity.GraphToolkit.Editor;
 
 [CustomEditor(typeof(CharacterSO))]
 public class CharacterSOEditor : Editor
@@ -54,20 +55,17 @@ public class CharacterSOEditor : Editor
     {
         EditorGUILayout.Space(5);
 
-        if(GUILayout.Button("Create New Dialogue", GUILayout.Height(30)))
+        if(GUILayout.Button("Create New Dialogue Graph", GUILayout.Height(30)))
         {
-            RuntimeDialogueGraph newDialogue = CreateInstance<RuntimeDialogueGraph>();
-
-
-            string assetPath = $"Assets/Data/{characterSO.name}_Dia_{characterSO.dialogues.Length + 1}.asset";
-
+            string assetPath = $"Assets/Data/{characterSO.name}_Dia_{characterSO.dialogues.Length + 1}.dialoguegraph";
             assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
-
-            AssetDatabase.CreateAsset(newDialogue, assetPath);
+            GraphDatabase.CreateGraph<DialogueGraph>(assetPath);
+            AssetDatabase.ImportAsset(assetPath);
+            var runtimegraph = AssetDatabase.LoadAssetAtPath<RuntimeDialogueGraph>(assetPath);
             AssetDatabase.SaveAssets();
 
             System.Array.Resize(ref characterSO.dialogues, characterSO.dialogues.Length + 1);
-            characterSO.dialogues[^1] = newDialogue;
+            characterSO.dialogues[^1] = runtimegraph;
 
             EditorUtility.SetDirty(characterSO);
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());

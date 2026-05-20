@@ -13,7 +13,8 @@ namespace DialogSystem.Dialogue
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private RectTransform panel;
-        [SerializeField] private GameObject choicePanel;
+        [SerializeField] private RectTransform choicePanel;
+        [SerializeField] private CanvasGroup choiceCanvasGroup;
         [SerializeField] private GameObject choiceButtonPrefab;
 
         private void Start()
@@ -39,8 +40,14 @@ namespace DialogSystem.Dialogue
         public void SetChoiceButtons(List<string> choices, Action<int> onChoiceSelected)
         {
             ClearChoiceButtons();
-            choicePanel.SetActive(true);
+            choicePanel.gameObject.SetActive(true);
 
+            choiceCanvasGroup.alpha = 0f;
+            choicePanel.localScale = Vector3.zero;
+            DOTween.Sequence()
+                .Append(choiceCanvasGroup.DOFade(1f, 0.2f))
+                .Join(choicePanel.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
+            
             foreach(string choice in choices)
             {
                 GameObject buttonObj = Instantiate(choiceButtonPrefab, choicePanel.transform);
@@ -51,6 +58,7 @@ namespace DialogSystem.Dialogue
                 Button button = buttonObj.GetComponent<Button>();
                 button.onClick.AddListener(() => onChoiceSelected(index));
                 button.onClick.AddListener(() => ClearChoiceButtons());
+                button.onClick.AddListener(() => HideChoiceButtons());
             }
         }
 
@@ -61,7 +69,18 @@ namespace DialogSystem.Dialogue
                 Destroy(child.gameObject);
             }
 
-            choicePanel.SetActive(false);
+        }
+
+        private void HideChoiceButtons()
+        {
+            DOTween.Kill(choicePanel);
+            DOTween.Kill(choiceCanvasGroup);
+            choiceCanvasGroup.alpha = 1f;
+            choicePanel.localScale = Vector3.one;
+            DOTween.Sequence()
+                .Append(choiceCanvasGroup.DOFade(0f, 0.15f))
+                .Join(choicePanel.DOScale(0f, 0.2f).SetEase(Ease.InBack))
+                .OnComplete(() => choicePanel.gameObject.SetActive(false));
         }
 
         public void Hide()

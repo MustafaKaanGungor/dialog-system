@@ -110,7 +110,28 @@ namespace DialogSystem.Dialogue
         private void OnTypewriterCompleted()
         {
             state = DialogueState.WaitingForInput;
-            WaitingForInput();
+            if (currentNode.choices != null && currentNode.choices.Count > 0)
+            {
+                List<string> choices = new List<string>();
+                for (int i = 0; i < currentNode.choices.Count; i++)
+                {
+                    choices.Add(currentNode.choices[i].ChoiceText);
+                }
+
+                dialogueBoxView.SetChoiceButtons(choices, choiceIndex =>
+                {
+                    string destinationID = currentNode.choices[choiceIndex].DestinationID;
+                    if (!string.IsNullOrEmpty(destinationID))
+                    {
+                        currentNode.NextNodeID = destinationID;
+                        AdvanceLine();
+                    }
+                    else
+                    {
+                        EndDialogue();
+                    }
+                });
+            }
         }
 
         private void AdvanceLine()
