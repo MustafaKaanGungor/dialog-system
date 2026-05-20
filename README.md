@@ -11,6 +11,9 @@
 
 ---
 
+## Try the System
+You can play the game at [itch.io](https://bringsalavat.itch.io/dialogue-system)
+
 ## Features
 
 - **ScriptableObject Event Channel** — fully decoupled event bus. Producers and consumers never reference each other directly.
